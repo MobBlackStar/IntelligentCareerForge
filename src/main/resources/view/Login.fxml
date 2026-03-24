@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<!-- SARAH: Notice how fx:controller links directly to your Java file! -->
+
+<AnchorPane prefHeight="496.0" prefWidth="698.0" style="-fx-background-color: #0f0f1a;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.careerforge.controller.LoginController">
+    <children>
+        <Label layoutX="183.0" layoutY="83.0" text="THE CAREER FORGE" textFill="#00f2fe">
+            <font>
+                <Font name="System Bold" size="36.0" />
+            </font>
+        </Label>
+        <Label layoutX="268.0" layoutY="136.0" text="Ascend beyond the mortal CV" textFill="#a0a0b5" />
+
+        <!-- FXML Wires: fx:id must match the variable names in LoginController.java exactly! -->
+        <TextField fx:id="emailField" layoutX="225.0" layoutY="210.0" prefHeight="40.0" prefWidth="250.0" promptText="Enter your email..." style="-fx-background-color: #1a1a2e; -fx-text-fill: white; -fx-border-color: #00f2fe; -fx-border-radius: 5;" />
+        <PasswordField fx:id="passwordField" layoutX="225.0" layoutY="270.0" prefHeight="40.0" prefWidth="250.0" promptText="Enter your password..." style="-fx-background-color: #1a1a2e; -fx-text-fill: white; -fx-border-color: #00f2fe; -fx-border-radius: 5;" />
+
+        <!-- FXML Wire: onAction calls the handleLogin method in your Java file! -->
+        <Button layoutX="225.0" layoutY="340.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #00f2fe; -fx-text-fill: #0f0f1a; -fx-font-weight: bold; -fx-background-radius: 5;" text="ENTER THE ARENA" textFill="#0f0923">
+            <font>
+                <Font size="16.0" />
+            </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+        </Button>
+
+        <Label fx:id="errorLabel" alignment="CENTER" layoutX="150.0" layoutY="410.0" prefWidth="400.0" textFill="#ff0044" />
+    </children>
+</AnchorPane>

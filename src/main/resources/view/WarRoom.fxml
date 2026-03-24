@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #050510;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.careerforge.controller.WarRoomController">
+    <children>
+        <!-- HEADER -->
+        <Label layoutX="40.0" layoutY="30.0" text="THE WAR ROOM" textFill="#00f2fe">
+            <font>
+                <Font name="System Bold" size="32.0" />
+            </font>
+        </Label>
+        <Label layoutX="40.0" layoutY="75.0" text="Manage your tactical job hunt" textFill="#a0a0b5" />
+
+        <!-- MAGIC PASTE AREA (Top Right) -->
+        <VBox layoutX="600.0" layoutY="20.0" spacing="10.0">
+            <children>
+                <TextArea fx:id="magicPasteArea" prefHeight="80.0" prefWidth="360.0" promptText="Paste messy LinkedIn job description here..." style="-fx-control-inner-background: #0f0f1a; -fx-text-fill: white; -fx-border-color: #00f2fe;" />
+                <Button onAction="#handleMagicPaste" prefHeight="30.0" prefWidth="360.0" style="-fx-background-color: #00f2fe; -fx-text-fill: #050510; -fx-font-weight: bold;" text="🦅 INJECT JOB OFFER" />
+            </children>
+        </VBox>
+
+        <!-- KANBAN BOARD (Center) -->
+        <HBox layoutX="40.0" layoutY="160.0" spacing="30.0">
+            <children>
+                <!-- TARGETED COLUMN -->
+                <VBox prefHeight="500.0" prefWidth="280.0" style="-fx-background-color: #0f0f1a; -fx-background-radius: 10;">
+                    <children>
+                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="280.0" style="-fx-background-color: #1a1a2e; -fx-background-radius: 10 10 0 0;" text="TARGETED" textFill="#00f2fe">
+                            <font><Font name="System Bold" size="18.0" /></font>
+                        </Label>
+                        <ScrollPane hbarPolicy="NEVER" prefHeight="450.0" prefWidth="280.0" style="-fx-background-color: transparent; -fx-background: transparent;">
+                            <content>
+                                <VBox fx:id="targetedColumn" prefWidth="260.0" spacing="15.0" style="-fx-padding: 15;" />
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </VBox>
+
+                <!-- APPLIED COLUMN -->
+                <VBox prefHeight="500.0" prefWidth="280.0" style="-fx-background-color: #0f0f1a; -fx-background-radius: 10;">
+                    <children>
+                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="280.0" style="-fx-background-color: #1a1a2e; -fx-background-radius: 10 10 0 0;" text="APPLIED" textFill="#facc15">
+                            <font><Font name="System Bold" size="18.0" /></font>
+                        </Label>
+                        <ScrollPane hbarPolicy="NEVER" prefHeight="450.0" prefWidth="280.0" style="-fx-background-color: transparent; -fx-background: transparent;">
+                            <content>
+                                <VBox fx:id="appliedColumn" prefWidth="260.0" spacing="15.0" style="-fx-padding: 15;" />
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </VBox>
+
+                <!-- INTERVIEWING COLUMN -->
+                <VBox prefHeight="500.0" prefWidth="280.0" style="-fx-background-color: #0f0f1a; -fx-background-radius: 10;">
+                    <children>
+                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="280.0" style="-fx-background-color: #1a1a2e; -fx-background-radius: 10 10 0 0;" text="INTERVIEWING" textFill="#ef4444">
+                            <font><Font name="System Bold" size="18.0" /></font>
+                        </Label>
+                        <ScrollPane hbarPolicy="NEVER" prefHeight="450.0" prefWidth="280.0" style="-fx-background-color: transparent; -fx-background: transparent;">
+                            <content>
+                                <VBox fx:id="interviewingColumn" prefWidth="260.0" spacing="15.0" style="-fx-padding: 15;" />
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</AnchorPane>
