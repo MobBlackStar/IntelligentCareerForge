@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<!-- FEDI: The Living Shell of the Omni-Chimera -->
+<BorderPane prefHeight="768.0" prefWidth="1366.0" style="-fx-background-color: #050510;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.careerforge.controller.DashboardController">
+
+    <!-- THE SIDEBAR (Permanent) -->
+    <left>
+        <VBox prefWidth="250.0" style="-fx-background-color: #0a0a16; -fx-border-color: #1a1a2e; -fx-border-width: 0 2 0 0;" BorderPane.alignment="CENTER">
+            <children>
+                <!-- LOGO AREA -->
+                <VBox alignment="CENTER" prefHeight="150.0" prefWidth="250.0" spacing="10.0">
+                    <children>
+                        <Label text="OMNI-CHIMERA" textFill="#00f2fe">
+                            <font>
+                                <Font name="System Bold" size="24.0" />
+                            </font>
+                        </Label>
+                        <Label text="Solanum Core Active" textFill="#00ff00">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </VBox>
+
+                <!-- THE AUTO-DISCOVERING MENU MATRIX -->
+                <VBox fx:id="sidebarMenu" prefHeight="500.0" prefWidth="250.0" spacing="10.0" style="-fx-padding: 20 0 0 0;" />
+
+            </children>
+        </VBox>
+    </left>
+
+    <!-- THE REACTOR CORE (The breathing center where screens are injected) -->
+    <center>
+        <StackPane fx:id="reactorCore" style="-fx-background-color: #050510;" BorderPane.alignment="CENTER" />
+    </center>
+
+</BorderPane>
