@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #050510;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.careerforge.controller.WarRoomController">
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" stylesheets="@../css/style.css" styleClass="root" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.careerforge.controller.WarRoomController">
     <children>
         <!-- HEADER -->
         <Label layoutX="40.0" layoutY="30.0" text="THE WAR ROOM" textFill="#00f2fe">
@@ -73,5 +73,6 @@
                 </VBox>
             </children>
         </HBox>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" stylesheets="@../css/style.css" />
     </children>
 </AnchorPane>

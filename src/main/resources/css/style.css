@@ -1,55 +1,42 @@
-/* SARAH: This is the Corporate-Cyber Library */
+/* THE TRUE LINKEDIN-SHADOW THEME */
 
 .root {
-    -fx-background-color: #0d1117; /* Deep Navy Background */
-    -fx-font-family: "Segoe UI", "System";
+    -fx-background-color: #0d1117; /* Dark Charcoal Navy */
 }
 
 /* THE KANBAN COLUMNS */
 .kanban-column {
-    -fx-background-color: #161b22;
+    -fx-background-color: #161b22; /* Slightly lighter for depth */
     -fx-background-radius: 12;
     -fx-border-color: #30363d;
+    -fx-border-width: 1;
     -fx-border-radius: 12;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);
+    -fx-padding: 10;
 }
 
-/* THE JOB CARDS (The LinkedIn Vibe) */
+/* THE JOB CARDS - THE CORE IDENTITY */
 .job-card {
     -fx-background-color: #21262d;
+    -fx-text-fill: #58a6ff;        /* LinkedIn Blue */
+    -fx-padding: 15;
     -fx-background-radius: 8;
     -fx-border-color: #30363d;
     -fx-border-radius: 8;
-    -fx-padding: 15;
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI", "System";
 }
 
 .job-card:hover {
-    -fx-border-color: #58a6ff; /* LinkedIn Blue Glow on Hover */
+    -fx-background-color: #2b313a;
+    -fx-border-color: #58a6ff;
+    -fx-effect: dropshadow(three-pass-box, rgba(88,166,255,0.4), 15, 0, 0, 0);
     -fx-cursor: hand;
 }
 
-.job-card-title {
-    -fx-text-fill: #58a6ff;
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
-}
-
-/* THE NEON ACTION BUTTONS */
+/* BUTTONS */
 .action-button {
     -fx-background-color: #0a66c2; /* Solid LinkedIn Blue */
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-background-radius: 20; /* Rounded like LinkedIn */
-}
-
-.action-button:hover {
-    -fx-background-color: #58a6ff; /* Neon Brightness on Hover */
-    -fx-effect: dropshadow(three-pass-box, rgba(88,166,255,0.5), 10, 0, 0, 0);
-}
-
-/* THE TEXT AREAS */
-.text-area {
-    -fx-control-inner-background: #0d1117;
-    -fx-text-fill: #e6edf3;
-    -fx-border-color: #30363d;
+    -fx-background-radius: 20;
 }

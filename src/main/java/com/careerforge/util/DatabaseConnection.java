@@ -16,7 +16,7 @@ public class DatabaseConnection {
     private Connection connection;
 
     // Database credentials
-    private final String URL = "jdbc:mysql://localhost:3306/career_forge_omni";
+    private final String URL = "jdbc:mysql://localhost:3308/career_forge_omni";
     private final String USER = "root";
     private final String PASS = ""; // Change if your Wamp/Xampp has a password!
 
