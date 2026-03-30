@@ -1,7 +1,7 @@
 package com.careerforge;
 
+import com.careerforge.core.SolanumCore;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -10,18 +10,25 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Sarah: Ensure the "/" is before "view"!
-        Parent root = FXMLLoader.load(getClass().getResource("/view/WarRoom.fxml"));
 
-        primaryStage.setTitle("THE CAREER FORGE - Command Center");
-        primaryStage.setScene(new Scene(root));
+        // 🛑 FEDI-STANDARD: We ask the Solanum Core to materialize the MASTER SHELL!
+        Parent root = SolanumCore.getInstance().observe("DashboardShell.fxml");
+
+        Scene mainScene = new Scene(root);
+
+        // The Global Theme Engine
+        String css = getClass().getResource("/css/style.css").toExternalForm();
+        mainScene.getStylesheets().add(css);
+
+        primaryStage.setTitle("THE CAREER FORGE - Omni-Chimera");
+        primaryStage.setScene(mainScene);
+
+        // Make the window big enough for the Shell!
+        primaryStage.setWidth(1366);
+        primaryStage.setHeight(768);
+
         primaryStage.show();
 
-        System.out.println("✅ WAR ROOM STABILIZED. The Arena is open.");
-    }
-
-    public static void main(String[] args) {
-        System.out.println("=== 🚀 INITIATING OMNI-CHIMERA UI ===");
-        launch(args);
+        IO.println("✅ OMNI-CHIMERA ONLINE. The Living Shell is breathing.");
     }
 }
