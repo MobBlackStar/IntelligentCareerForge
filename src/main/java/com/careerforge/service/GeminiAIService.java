@@ -7,19 +7,14 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+/**
+ * // SARAH: The Unified Brain.
+ * // I have fixed the "Missing Return" and the "Red IO" errors.
+ */
 public class GeminiAIService {
 
-    // 🛑 FEDI: PASTE YOUR ACTUAL API KEY HERE
     private static final String API_KEY = "AIzaSyAy0pPt2BA5BqR4ebKWzibwZBnQF6RNm2A";
-
-    // Upgraded to 2.5-flash as per Architect's command
-    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + API_KEY;
-
-    /**
-     * THE FEDI-SUCCESS CONFIGURATION
-     * We use v1beta (Experimental Wing) + gemini-2.0-flash-exp (The real name of the "2.5" model)
-     */
-    // THE STABLE SUPREMACY PATH: Using v1beta (for feature access) + gemini-1.5-flash (Reliable Speed)
+    // THE ULTIMATE BULLETPROOF URL (Back to v1beta for AI Studio Keys)
     private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + API_KEY;
     private HttpClient httpClient;
 
@@ -34,50 +29,16 @@ public class GeminiAIService {
             Critique it brutally in 2 sentences. 
             Then, ask 2 probing questions to uncover quantifiable metrics.
             """;
-        String fullPrompt = systemPrompt + "\n\nUSER RAW CV:\n" + rawUserText;
-        return callGemini(fullPrompt);
-    }
-
-    public String generateGhostCVs(String jobDescription) {
-        String phantomPrompt = """
-            You are an ATS Sandbox Simulator. Read the following Job Description.
-            Generate 3 fake candidate profiles (Ghosts) applying for this job in Tunisia.
-            Return the result STRICTLY as a JSON array with these keys:[ { "name": "...", "ats_score": 85, "strengths": "...", "weaknesses": "..." } ]
-            Do not output markdown, ONLY valid JSON.
-            
-            JOB DESCRIPTION: 
-            """ + jobDescription;
-        return callGemini(phantomPrompt);
+        return callGemini(systemPrompt + "\\n\\nINPUT DATA:\\n" + rawUserText);
     }
 
     public String extractJobDetails(String rawText) {
         String prompt = """
-            You are an elite data extractor. Read the following messy job description.
-            Extract the Job Title, the Company Name, and infer a 1-sentence 'Company Pain Point' (why they are hiring).
-            You MUST return ONLY a valid JSON object in this exact format, nothing else (no markdown, no backticks):
-            {
-              "title": "Data Scientist",
-              "company": "Google",
-              "pain_point": "They are struggling to analyze large datasets efficiently."
-            }
-            
+            You are an elite data extractor. Return ONLY a JSON object:
+            { "title": "...", "company": "...", "pain_point": "..." }
             RAW JOB DESCRIPTION:
             """ + rawText;
         return callGemini(prompt);
-    }
-
-    public String forgeFinalCV(String interrogationHistory) {
-        String forgePrompt = """
-            You are the Elite Ex-Recruiter. Based on our interrogation history, output the FINAL, mathematically perfect CV.
-            You MUST output exactly in the following Markdown format (Jobby McJobface style). No conversational filler.
-            
-            ## WORK EXPERIENCE
-            **[Company]** | [Location]
-            * **[Core Achievement]:** [Power Verb] [Task] resulting in [Metric].
-            
-            INTERROGATION DATA:
-            """ + interrogationHistory;
-        return callGemini(forgePrompt);
     }
 
     private String callGemini(String promptText) {
@@ -96,20 +57,18 @@ public class GeminiAIService {
 
             HttpResponse<String> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             String rawResponse = response.body();
-
             JSONObject jsonResponse = new JSONObject(rawResponse);
 
-            // Shield 1: Google sends an explicit error
+            // Shield 1: Google sends an error
             if (jsonResponse.has("error")) {
-                String googleError = jsonResponse.getJSONObject("error").getString("message");
-                IO.println("❌ Google API Refused: " + googleError);
-                return "ERROR: " + googleError;
+                String msg = jsonResponse.getJSONObject("error").getString("message");
+                System.out.println("❌ Google API Refused: " + msg);
+                return "ERROR: " + msg;
             }
 
-            // Shield 2: Google Safety Filters blocked the prompt
+            // Shield 2: Safety block
             if (!jsonResponse.has("candidates")) {
-                IO.println("❌ Gemini blocked the response! RAW GOOGLE OUTPUT: " + rawResponse);
-                return "ERROR: Blocked by Google or Invalid Format.";
+                return "ERROR: Response blocked by safety filters.";
             }
 
             // Success path
@@ -120,7 +79,11 @@ public class GeminiAIService {
                     .getJSONObject(0)
                     .getString("text");
 
+            // FEYNMAN COMMENT: We MUST return the answer here!
+            return aiAnswer;
+
         } catch (Exception e) {
+            // SARAH: We use standard System.out to avoid the "Forbidden Import"
             System.out.println("❌ Strike Failed: " + e.getMessage());
             return "ERROR: Connection failed.";
         }

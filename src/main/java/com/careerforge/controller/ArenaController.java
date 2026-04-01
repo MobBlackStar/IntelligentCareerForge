@@ -1,139 +1,103 @@
 package com.careerforge.controller;
 
-import com.careerforge.model.JobOffer;
-import com.careerforge.model.User;
-import com.careerforge.service.ArenaService;
-import com.careerforge.util.UserSession;
+import com.careerforge.service.GeminiAIService;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.util.Duration;
-
-import java.util.concurrent.CompletableFuture;
 
 public class ArenaController {
 
     @FXML private Label timerLabel;
-    @FXML private Label questionLabel;
+    @FXML private Label questionDisplay;
     @FXML private TextArea answerArea;
-    @FXML private Button submitButton;
-    @FXML private Label judgmentLabel;
+    @FXML private Button actionButton;
 
-    private ArenaService arenaService = new ArenaService();
-    private Timeline countdown;
+    private GeminiAIService oracle = new GeminiAIService();
+    private Timeline timeline;
     private int secondsRemaining = 60;
-
-    // We store the generated question so we can send it back for grading
-    private String currentQuestion = "";
-    private JobOffer targetJob;
+    private boolean isRunning = false;
 
     @FXML
     public void initialize() {
-        IO.println("💀 THE ARENA: Initializing Pressure Cooker...");
-
-        // For testing purposes, we hardcode a job. In production, we pass the JobOffer from the Kanban board.
-        this.targetJob = new JobOffer("Senior Dev", "Google", "Code in Java", "Needs massive scale");
-
-        lockArena("Summoning the CEO... Prepare yourself.");
-
-        // Fetch the brutal question asynchronously
-        CompletableFuture.runAsync(() -> {
-            try {
-                User activeUser = UserSession.getInstance().getActiveUser();
-                if (activeUser == null) activeUser = new User("Fedi (Test)", "test@forge.com", "pass", "Dev");
-
-                currentQuestion = arenaService.generateBrutalQuestion(activeUser, targetJob);
-
-                Platform.runLater(() -> {
-                    questionLabel.setText(currentQuestion);
-                    unlockArena();
-                    startTimer();
-                });
-            } catch (Exception e) {
-                IO.println("❌ Arena failed to summon CEO: " + e.getMessage());
-            }
-        });
+        // FEYNMAN COMMENT: We lock the keyboard until the user clicks START!
+        answerArea.setDisable(true);
+        setupTimer();
     }
 
-    /**
-     * FEDI-STANDARD GAMIFICATION: The 60-Second Panic Timer
-     */
-    private void startTimer() {
-        secondsRemaining = 60;
-        timerLabel.setText("60");
-        timerLabel.setStyle("-fx-text-fill: #00ff00; -fx-font-weight: bold; -fx-font-size: 24;");
+    private void setupTimer() {
+        this.timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            this.secondsRemaining--;
+            this.timerLabel.setText(String.valueOf(this.secondsRemaining));
 
-        // Creates a loop that runs every 1 second
-        countdown = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            secondsRemaining--;
-            timerLabel.setText(String.valueOf(secondsRemaining));
-
-            // Psychological UI changes as time runs out
-            if (secondsRemaining == 15) {
-                timerLabel.setStyle("-fx-text-fill: #ff0000; -fx-font-weight: bold; -fx-font-size: 30;");
-                IO.println("⚠️ 15 SECONDS REMAINING! The pressure is rising.");
+            // THE ADRENALINE PULSE
+            if (this.secondsRemaining <= 10) {
+                // FEYNMAN COMMENT: We are changing the UI color every second
+                // to make it look like a flashing alarm!
+                if (this.secondsRemaining % 2 == 0) {
+                    this.timerLabel.setStyle("-fx-text-fill: white; -fx-scale-x: 1.5; -fx-scale-y: 1.5;");
+                } else {
+                    this.timerLabel.setStyle("-fx-text-fill: #ff0044; -fx-scale-x: 1.2; -fx-scale-y: 1.2;");
+                }
             }
 
-            if (secondsRemaining <= 0) {
-                countdown.stop();
-                handleTimeUp();
+            if (this.secondsRemaining <= 0) {
+                handleEndArena("💥 SYSTEM FAILURE: You were too slow.");
             }
         }));
-
-        countdown.setCycleCount(Timeline.INDEFINITE);
-        countdown.play();
+        this.timeline.setCycleCount(60);
     }
-
-    private void handleTimeUp() {
-        IO.println("💀 TIME IS UP! You failed to answer the CEO.");
-        lockArena("TIME IS UP. The CEO walks away.");
-        judgmentLabel.setText("SCORE: 0/100\nYou froze under pressure.");
-        judgmentLabel.setStyle("-fx-text-fill: #ff0044; -fx-font-weight: bold;");
-    }
-
     @FXML
-    public void handleSubmit() {
-        String answer = answerArea.getText();
-        if (answer.isEmpty()) return;
+    public void handleArenaAction() {
+        if (!this.isRunning) {
+            startArena();
+        } else {
+            handleEndArena("⌛ SUBMITTED. The Oracle is grading your survival...");
+        }
+    }
 
-        IO.println("🛡️ Candidate submits answer with " + secondsRemaining + " seconds left!");
-        countdown.stop();
-        lockArena("The CEO is judging your response...");
+    private void startArena() {
+        this.isRunning = true;
+        this.secondsRemaining = 60;
+        this.answerArea.setDisable(false);
+        this.answerArea.clear();
+        this.actionButton.setText("SUBMIT BEFORE TIME OUT");
 
-        CompletableFuture.runAsync(() -> {
+        this.questionDisplay.setText("CEO: 'We noticed your CV claims technical mastery. Explain in 3 sentences how you would handle a complete server crash on your first day.'");
+
+        this.timeline.playFromStart();
+        System.out.println("🔥 ARENA IGNITED.");
+    }
+
+    private void handleEndArena(String initialMsg) {
+        this.isRunning = false;
+        this.timeline.stop();
+        this.answerArea.setDisable(true);
+        this.actionButton.setText("RE-ENTER THE ARENA");
+        this.questionDisplay.setText("⌛ THE ORACLE IS WEIGHING YOUR SOUL...");
+
+        // FEYNMAN COMMENT: We send your answer to the AI in a background thread.
+        // It's like sending a letter to a judge and waiting for the verdict!
+        new Thread(() -> {
             try {
-                String judgment = arenaService.evaluateAnswer(targetJob, currentQuestion, answer);
+                String userAnswer = answerArea.getText();
+                String prompt = "Review this interview answer: '" + userAnswer +
+                        "'. Give a survival score (0-100) and 1 sentence of brutal feedback.";
 
-                Platform.runLater(() -> {
-                    judgmentLabel.setText(judgment);
+                String feedback = oracle.interrogateCV(prompt);
 
-                    // Simple check to color the UI based on score
-                    if (judgment.contains("SCORE: 100") || judgment.contains("SCORE: 9") || judgment.contains("SCORE: 8")) {
-                        judgmentLabel.setStyle("-fx-text-fill: #00ff00; -fx-font-weight: bold;"); // Green for pass
-                    } else {
-                        judgmentLabel.setStyle("-fx-text-fill: #ff0044; -fx-font-weight: bold;"); // Red for fail
+                // Update the UI with the real grade!
+                javafx.application.Platform.runLater(() -> {
+                    this.questionDisplay.setText(feedback);
+                    // If you survived (Score > 70), make it glow blue. If you died, keep it red.
+                    if (!feedback.contains("0") && !feedback.contains("1") && !feedback.contains("2")) {
+                        this.questionDisplay.setStyle("-fx-border-color: #58a6ff; -fx-text-fill: #58a6ff;");
                     }
                 });
             } catch (Exception e) {
-                IO.println("❌ Oracle Judgment Failed: " + e.getMessage());
+                javafx.application.Platform.runLater(() -> this.questionDisplay.setText("❌ The Oracle is silent. Try again."));
             }
-        });
-    }
-
-    private void lockArena(String message) {
-        answerArea.setDisable(true);
-        submitButton.setDisable(true);
-        judgmentLabel.setText(message);
-        judgmentLabel.setStyle("-fx-text-fill: #a0a0b5;");
-    }
-
-    private void unlockArena() {
-        answerArea.setDisable(false);
-        submitButton.setDisable(false);
-        judgmentLabel.setText("");
+        }).start();
     }
 }

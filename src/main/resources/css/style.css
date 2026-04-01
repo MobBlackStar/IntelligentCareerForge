@@ -40,3 +40,136 @@
     -fx-font-weight: bold;
     -fx-background-radius: 20;
 }
+/* --- THE ARENA: ALPHA RESTORATION --- */
+
+.arena-root {
+    -fx-background-color: #0d1117;
+    /* We keep a subtle crimson glow only on the left border for a "Critical" feel */
+    -fx-border-color: transparent transparent transparent #ff0044;
+    -fx-border-width: 0 0 0 4;
+}
+
+.timer-label {
+    -fx-font-family: "System", sans-serif;
+    -fx-font-size: 80px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff0044;
+    -fx-effect: dropshadow(gaussian, #ff0044, 20, 0.5, 0, 0);
+}
+
+.question-display {
+    -fx-background-color: #161b22;
+    -fx-border-color: #30363d;
+    -fx-border-radius: 10;
+    -fx-padding: 25;
+    -fx-text-fill: #e6edf3;
+    -fx-font-size: 18px;
+    -fx-font-style: italic;
+}
+
+.panic-button {
+    -fx-background-color: #ff0044;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-background-radius: 30; /* THE PILL SHAPE FROM ALPHA */
+    -fx-cursor: hand;
+}
+
+.panic-button:hover {
+    -fx-background-color: #ff4d79;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 0, 68, 0.6), 20, 0, 0, 0);
+}
+
+.arena-input {
+    -fx-control-inner-background: #21262d;
+    -fx-text-fill: white;
+    -fx-border-color: #30363d;
+    -fx-border-radius: 5;
+}
+/* --- PHANTOM SANDBOX: PRO-LEAGUE EDITION --- */
+
+.sandbox-root {
+    -fx-background-color: radial-gradient(center 50% 50%, radius 100%, #1a1a2e, #0d1117);
+}
+
+.leaderboard-card {
+    -fx-background-color: #161b22;
+    -fx-border-color: #30363d;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-padding: 20;
+}
+
+/* Hover effect: Makes the competitor look like a Target being locked on */
+.leaderboard-card:hover {
+    -fx-border-color: #00f2fe;
+    -fx-background-color: #1c2128;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 242, 254, 0.4), 15, 0, 0, 0);
+}
+
+.rank-diamond {
+    -fx-font-family: "Impact", sans-serif;
+    -fx-font-size: 24px;
+    -fx-text-fill: #58a6ff;
+    -fx-padding: 10;
+    -fx-border-color: #58a6ff;
+    -fx-border-width: 2;
+    -fx-rotate: 45; /* Tilts the rank to look like a diamond */
+}
+
+.rank-text {
+    -fx-rotate: -45; /* Flips the text back so it's readable */
+}
+
+.score-meter-bg {
+    -fx-background-color: #30363d;
+    -fx-background-radius: 5;
+}
+
+.score-meter-fill {
+    -fx-background-color: linear-gradient(to right, #58a6ff, #00f2fe);
+    -fx-background-radius: 5;
+}
+
+.assimilate-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #00f2fe;
+    -fx-border-radius: 20;
+    -fx-text-fill: #00f2fe;
+    -fx-font-weight: bold;
+}
+
+.assimilate-button:hover {
+    -fx-background-color: #00f2fe;
+    -fx-text-fill: #0d1117;
+}
+/* --- THE RPG SKILL TREE: NEON EDITION --- */
+
+.skill-canvas {
+    -fx-background-color: #0d1117; /* Matches the LinkedIn Shadow theme */
+}
+
+.node-acquired {
+    -fx-fill: #58a6ff;
+    -fx-effect: dropshadow(gaussian, #58a6ff, 20, 0.5, 0, 0);
+}
+
+.node-missing {
+    -fx-fill: #161b22;
+    -fx-stroke: #ef4444;
+    -fx-stroke-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(239, 68, 68, 0.4), 10, 0.5, 0, 0);
+}
+
+.skill-line {
+    -fx-stroke: #30363d;
+    -fx-stroke-width: 1.5;
+}
+
+.node-text {
+    -fx-fill: #e6edf3;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+}
+}
