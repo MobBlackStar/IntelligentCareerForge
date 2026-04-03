@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox spacing="25.0" style="-fx-padding: 40;" styleClass="sandbox-root" stylesheets="@../css/style.css" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.careerforge.controller.PhantomSandboxController">
+    <children>
+        <HBox alignment="CENTER_LEFT" spacing="20.0">
+            <children>
+                <Label text="ATS COMBAT RECORD" textFill="#58a6ff">
+                    <font><Font name="System Bold" size="32.0" /></font>
+                </Label>
+                <Region HBox.hgrow="ALWAYS" />
+                <Label text="ALPHA STATUS: PENDING" textFill="#ef4444" style="-fx-font-family: monospace;" />
+            </children>
+        </HBox>
+
+        <HBox spacing="40.0" VBox.vgrow="ALWAYS">
+            <children>
+                <!-- LEADERBOARD -->
+                <VBox fx:id="leaderboardContainer" prefWidth="550.0" spacing="15.0">
+                    <children>
+                        <Label text="PHANTOM COMPETITORS" textFill="#8b949e">
+                            <font><Font name="System Bold" size="14.0" /></font>
+                        </Label>
+                        <!-- Cards injected by Java -->
+                    </children>
+                </VBox>
+
+                <!-- TACTICAL OVERLAY -->
+                <VBox prefWidth="350.0" spacing="20.0" styleClass="kanban-column" style="-fx-padding: 25;">
+                    <children>
+                        <Label text="STRATEGIC INTEL" textFill="#00f2fe">
+                            <font><Font name="System Bold" size="20.0" /></font>
+                        </Label>
+                        <Separator opacity="0.1" />
+                        <Label fx:id="insightDisplay" text="Select a ghost to identify weaknesses." wrapText="true" minHeight="100.0" />
+
+                        <Region VBox.vgrow="ALWAYS" />
+
+                        <Button onAction="#handleAssimilate" prefHeight="50.0" prefWidth="310.0" styleClass="assimilate-button" text="🧬 ASSIMILATE LOGIC" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</VBox>
