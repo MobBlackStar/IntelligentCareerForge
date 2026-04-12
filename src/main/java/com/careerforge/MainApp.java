@@ -12,7 +12,7 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         // 🛑 FEDI-STANDARD: We ask the Solanum Core to materialize the MASTER SHELL!
-        Parent root = SolanumCore.getInstance().observe("DashboardShell.fxml");
+        Parent root = SolanumCore.getInstance().observe("MainLayout.fxml");
 
         Scene mainScene = new Scene(root);
 

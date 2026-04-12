@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1000.0" stylesheets="@../css/style.css" styleClass="root" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.careerforge.controller.WarRoomController">
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" styleClass="root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.careerforge.controller.WarRoomController">
     <children>
         <!-- HEADER -->
-        <Label layoutX="40.0" layoutY="30.0" text="THE WAR ROOM" textFill="#00f2fe">
-            <font>
-                <Font name="System Bold" size="32.0" />
-            </font>
-        </Label>
-        <Label layoutX="40.0" layoutY="75.0" text="Manage your tactical job hunt" textFill="#a0a0b5" />
+        <VBox layoutX="40.0" layoutY="30.0" spacing="5.0">
+            <children>
+                <Label text="THE WAR ROOM" textFill="#58a6ff">
+                    <font>
+                        <Font name="System Bold" size="32.0" />
+                    </font>
+                </Label>
+                <Label text="Manage your tactical job hunt" textFill="#8b949e" />
+            </children>
+        </VBox>
 
         <!-- MAGIC PASTE AREA (Top Right) -->
         <VBox layoutX="600.0" layoutY="20.0" spacing="10.0">
             <children>
-                <TextArea fx:id="magicPasteArea" prefHeight="80.0" prefWidth="360.0" promptText="Paste messy LinkedIn job description here..." style="-fx-control-inner-background: #0f0f1a; -fx-text-fill: white; -fx-border-color: #00f2fe;" />
-                <Button onAction="#handleMagicPaste" prefHeight="30.0" prefWidth="360.0" style="-fx-background-color: #00f2fe; -fx-text-fill: #050510; -fx-font-weight: bold;" text="🦅 INJECT JOB OFFER" />
+                <TextArea fx:id="magicPasteArea" prefHeight="80.0" prefWidth="360.0" promptText="Paste messy LinkedIn job description here..." styleClass="text-area" />
+                <Button onAction="#handleMagicPaste" prefHeight="40.0" prefWidth="360.0" styleClass="action-button" text="🦅 INJECT JOB OFFER" />
             </children>
         </VBox>
 
@@ -31,9 +30,9 @@
         <HBox layoutX="40.0" layoutY="160.0" spacing="30.0">
             <children>
                 <!-- TARGETED COLUMN -->
-                <VBox prefHeight="500.0" prefWidth="280.0" style="-fx-background-color: #0f0f1a; -fx-background-radius: 10;">
+                <VBox prefHeight="500.0" prefWidth="280.0" styleClass="kanban-column">
                     <children>
-                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="280.0" style="-fx-background-color: #1a1a2e; -fx-background-radius: 10 10 0 0;" text="TARGETED" textFill="#00f2fe">
+                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="280.0" text="TARGETED" textFill="#58a6ff">
                             <font><Font name="System Bold" size="18.0" /></font>
                         </Label>
                         <ScrollPane hbarPolicy="NEVER" prefHeight="450.0" prefWidth="280.0" style="-fx-background-color: transparent; -fx-background: transparent;">
@@ -45,9 +44,9 @@
                 </VBox>
 
                 <!-- APPLIED COLUMN -->
-                <VBox prefHeight="500.0" prefWidth="280.0" style="-fx-background-color: #0f0f1a; -fx-background-radius: 10;">
+                <VBox prefHeight="500.0" prefWidth="280.0" styleClass="kanban-column">
                     <children>
-                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="280.0" style="-fx-background-color: #1a1a2e; -fx-background-radius: 10 10 0 0;" text="APPLIED" textFill="#facc15">
+                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="280.0" text="APPLIED" textFill="#facc15">
                             <font><Font name="System Bold" size="18.0" /></font>
                         </Label>
                         <ScrollPane hbarPolicy="NEVER" prefHeight="450.0" prefWidth="280.0" style="-fx-background-color: transparent; -fx-background: transparent;">
@@ -59,9 +58,9 @@
                 </VBox>
 
                 <!-- INTERVIEWING COLUMN -->
-                <VBox prefHeight="500.0" prefWidth="280.0" style="-fx-background-color: #0f0f1a; -fx-background-radius: 10;">
+                <VBox prefHeight="500.0" prefWidth="280.0" styleClass="kanban-column">
                     <children>
-                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="280.0" style="-fx-background-color: #1a1a2e; -fx-background-radius: 10 10 0 0;" text="INTERVIEWING" textFill="#ef4444">
+                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="280.0" text="INTERVIEWING" textFill="#ef4444">
                             <font><Font name="System Bold" size="18.0" /></font>
                         </Label>
                         <ScrollPane hbarPolicy="NEVER" prefHeight="450.0" prefWidth="280.0" style="-fx-background-color: transparent; -fx-background: transparent;">
@@ -73,6 +72,5 @@
                 </VBox>
             </children>
         </HBox>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" stylesheets="@../css/style.css" />
     </children>
 </AnchorPane>
