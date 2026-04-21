@@ -8,26 +8,25 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.util.Duration;
 
 import java.util.concurrent.CompletableFuture;
 
 public class ArenaController {
 
+    // SARAH'S FXML VARIABLES
     @FXML private Label timerLabel;
-    @FXML private Label questionLabel;
+    @FXML private Label questionDisplay;
     @FXML private TextArea answerArea;
-    @FXML private Button submitButton;
-    @FXML private Label judgmentLabel;
+    @FXML private Button actionButton;
 
+    // FEDI'S BACKEND ENGINE
     private ArenaService arenaService = new ArenaService();
-    private Timeline countdown;
+    private Timeline timeline;
     private int secondsRemaining = 60;
+    private boolean isRunning = false;
 
-    // We store the generated question so we can send it back for grading
     private String currentQuestion = "";
     private JobOffer targetJob;
 
@@ -35,105 +34,123 @@ public class ArenaController {
     public void initialize() {
         IO.println("💀 THE ARENA: Initializing Pressure Cooker...");
 
-        // For testing purposes, we hardcode a job. In production, we pass the JobOffer from the Kanban board.
+        answerArea.setDisable(true);
+        actionButton.setText("SUMMON THE CEO");
+
+        // For testing, mock the job. In production, pull from SolanumCore/EventBus
         this.targetJob = new JobOffer("Senior Dev", "Google", "Code in Java", "Needs massive scale");
 
-        lockArena("Summoning the CEO... Prepare yourself.");
+        setupTimer();
+    }
 
-        // Fetch the brutal question asynchronously
+    private void setupTimer() {
+        this.timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            this.secondsRemaining--;
+            this.timerLabel.setText(String.valueOf(this.secondsRemaining));
+
+            // SARAH'S GAMIFICATION: THE ADRENALINE PULSE
+            if (this.secondsRemaining <= 10) {
+                if (this.secondsRemaining % 2 == 0) {
+                    this.timerLabel.setStyle("-fx-text-fill: white; -fx-scale-x: 1.5; -fx-scale-y: 1.5;");
+                } else {
+                    this.timerLabel.setStyle("-fx-text-fill: #ff0044; -fx-scale-x: 1.2; -fx-scale-y: 1.2;");
+                }
+                IO.println("⚠️ ALARM: " + this.secondsRemaining + " seconds left!");
+            }
+
+            if (this.secondsRemaining <= 0) {
+                handleEndArena("💥 SYSTEM FAILURE: You were too slow.");
+            }
+        }));
+        this.timeline.setCycleCount(60);
+    }
+
+    @FXML
+    public void handleArenaAction() {
+        if (!this.isRunning) {
+            startArena();
+        } else {
+            handleEndArena("⌛ SUBMITTED. The Oracle is grading your survival...");
+        }
+    }
+
+    private void startArena() {
+        // Prevent spam clicking while loading
+        actionButton.setDisable(true);
+        questionDisplay.setText("Summoning the CEO... Prepare yourself.");
+        questionDisplay.setStyle("-fx-border-color: #30363d; -fx-text-fill: #e6edf3;"); // Reset CSS
+        IO.println("🔥 ARENA: Requesting brutal question from Oracle...");
+
+        // FEDI'S ASYNC ENGINE
         CompletableFuture.runAsync(() -> {
             try {
                 User activeUser = UserSession.getInstance().getActiveUser();
                 if (activeUser == null) activeUser = new User("Fedi (Test)", "test@forge.com", "pass", "Dev");
 
+                // Generate real question from Database/AI context
                 currentQuestion = arenaService.generateBrutalQuestion(activeUser, targetJob);
 
                 Platform.runLater(() -> {
-                    questionLabel.setText(currentQuestion);
-                    unlockArena();
-                    startTimer();
+                    this.isRunning = true;
+                    this.secondsRemaining = 60;
+                    this.timerLabel.setText("60");
+                    this.timerLabel.setStyle("-fx-text-fill: #ff0044; -fx-scale-x: 1.0; -fx-scale-y: 1.0;"); // Reset style
+
+                    this.answerArea.setDisable(false);
+                    this.answerArea.clear();
+
+                    this.questionDisplay.setText(currentQuestion);
+
+                    this.actionButton.setDisable(false);
+                    this.actionButton.setText("SUBMIT BEFORE TIME OUT");
+
+                    this.timeline.playFromStart();
+                    IO.println("🔥 ARENA IGNITED.");
                 });
             } catch (Exception e) {
                 IO.println("❌ Arena failed to summon CEO: " + e.getMessage());
+                Platform.runLater(() -> {
+                    questionDisplay.setText("❌ Connection to CEO failed. Try again.");
+                    actionButton.setDisable(false);
+                });
             }
         });
     }
 
-    /**
-     * FEDI-STANDARD GAMIFICATION: The 60-Second Panic Timer
-     */
-    private void startTimer() {
-        secondsRemaining = 60;
-        timerLabel.setText("60");
-        timerLabel.setStyle("-fx-text-fill: #00ff00; -fx-font-weight: bold; -fx-font-size: 24;");
+    private void handleEndArena(String initialMsg) {
+        this.isRunning = false;
+        this.timeline.stop();
+        this.answerArea.setDisable(true);
+        this.actionButton.setDisable(true); // Lock until graded
+        this.questionDisplay.setText(initialMsg);
+        IO.println(initialMsg);
 
-        // Creates a loop that runs every 1 second
-        countdown = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            secondsRemaining--;
-            timerLabel.setText(String.valueOf(secondsRemaining));
-
-            // Psychological UI changes as time runs out
-            if (secondsRemaining == 15) {
-                timerLabel.setStyle("-fx-text-fill: #ff0000; -fx-font-weight: bold; -fx-font-size: 30;");
-                IO.println("⚠️ 15 SECONDS REMAINING! The pressure is rising.");
-            }
-
-            if (secondsRemaining <= 0) {
-                countdown.stop();
-                handleTimeUp();
-            }
-        }));
-
-        countdown.setCycleCount(Timeline.INDEFINITE);
-        countdown.play();
-    }
-
-    private void handleTimeUp() {
-        IO.println("💀 TIME IS UP! You failed to answer the CEO.");
-        lockArena("TIME IS UP. The CEO walks away.");
-        judgmentLabel.setText("SCORE: 0/100\nYou froze under pressure.");
-        judgmentLabel.setStyle("-fx-text-fill: #ff0044; -fx-font-weight: bold;");
-    }
-
-    @FXML
-    public void handleSubmit() {
-        String answer = answerArea.getText();
-        if (answer.isEmpty()) return;
-
-        IO.println("🛡️ Candidate submits answer with " + secondsRemaining + " seconds left!");
-        countdown.stop();
-        lockArena("The CEO is judging your response...");
-
+        // FEDI'S ASYNC GRADING ENGINE
         CompletableFuture.runAsync(() -> {
             try {
-                String judgment = arenaService.evaluateAnswer(targetJob, currentQuestion, answer);
+                String userAnswer = answerArea.getText();
+                String feedback = arenaService.evaluateAnswer(targetJob, currentQuestion, userAnswer);
 
                 Platform.runLater(() -> {
-                    judgmentLabel.setText(judgment);
+                    this.questionDisplay.setText(feedback);
+                    this.actionButton.setDisable(false);
+                    this.actionButton.setText("RE-ENTER THE ARENA");
 
-                    // Simple check to color the UI based on score
-                    if (judgment.contains("SCORE: 100") || judgment.contains("SCORE: 9") || judgment.contains("SCORE: 8")) {
-                        judgmentLabel.setStyle("-fx-text-fill: #00ff00; -fx-font-weight: bold;"); // Green for pass
+                    // SARAH'S CSS LOGIC
+                    if (!feedback.contains("SCORE: 0") && !feedback.contains("SCORE: 1") && !feedback.contains("SCORE: 2") && !feedback.contains("SCORE: 3")) {
+                        this.questionDisplay.setStyle("-fx-border-color: #58a6ff; -fx-text-fill: #58a6ff;");
                     } else {
-                        judgmentLabel.setStyle("-fx-text-fill: #ff0044; -fx-font-weight: bold;"); // Red for fail
+                        this.questionDisplay.setStyle("-fx-border-color: #ff0044; -fx-text-fill: #ff0044;");
                     }
                 });
             } catch (Exception e) {
                 IO.println("❌ Oracle Judgment Failed: " + e.getMessage());
+                Platform.runLater(() -> {
+                    this.questionDisplay.setText("❌ The Oracle is silent. Try again.");
+                    this.actionButton.setDisable(false);
+                    this.actionButton.setText("RE-ENTER THE ARENA");
+                });
             }
         });
-    }
-
-    private void lockArena(String message) {
-        answerArea.setDisable(true);
-        submitButton.setDisable(true);
-        judgmentLabel.setText(message);
-        judgmentLabel.setStyle("-fx-text-fill: #a0a0b5;");
-    }
-
-    private void unlockArena() {
-        answerArea.setDisable(false);
-        submitButton.setDisable(false);
-        judgmentLabel.setText("");
     }
 }
