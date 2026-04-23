@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" spacing="40.0" styleClass="root" stylesheets="@../css/style.css" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.careerforge.controller.ArchetypeController">
+    <children>
+        <VBox alignment="CENTER" spacing="10.0">
+            <children>
+                <Label text="CHOOSE YOUR DESTINY" textFill="#58a6ff" style="-fx-font-size: 32; -fx-font-weight: bold;" />
+                <Label text="Select your professional domain to calibrate the Oracle" textFill="#8b949e" />
+            </children>
+        </VBox>
+
+        <FlowPane alignment="CENTER" hgap="30.0" vgap="30.0">
+            <children>
+                <VBox styleClass="category-card" onMouseClicked="#selectTech" pickOnBounds="true">
+                    <Label styleClass="category-icon" text="💻" mouseTransparent="true" />
+                    <Label text="TECH &amp; DEV" style="-fx-font-weight: bold;" mouseTransparent="true" />
+                </VBox>
+                <VBox styleClass="category-card" onMouseClicked="#selectBusiness" pickOnBounds="true">
+                    <Label styleClass="category-icon" text="📊" mouseTransparent="true" />
+                    <Label text="BUSINESS" style="-fx-font-weight: bold;" mouseTransparent="true" />
+                </VBox>
+                <VBox styleClass="category-card" onMouseClicked="#selectHealth" pickOnBounds="true">
+                    <Label styleClass="category-icon" text="🩺" mouseTransparent="true" />
+                    <Label text="HEALTHCARE" style="-fx-font-weight: bold;" mouseTransparent="true" />
+                </VBox>
+                <VBox styleClass="category-card" onMouseClicked="#selectArt" pickOnBounds="true">
+                    <Label styleClass="category-icon" text="🎨" mouseTransparent="true" />
+                    <Label text="CREATIVE" style="-fx-font-weight: bold;" mouseTransparent="true" />
+                </VBox>
+            </children>
+        </FlowPane>
+    </children>
+</VBox>

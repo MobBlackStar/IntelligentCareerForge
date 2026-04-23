@@ -8,17 +8,27 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+/**
+ * // FEDI & SARAH: The Unified Brain of the Omni-Chimera.
+ * // This service isolates all communication with Google's AI servers.
+ */
 public class GeminiAIService {
 
     // 🛑 FEDI: PASTE YOUR ACTUAL API KEY HERE
-    private static final String API_KEY = "AIzaSyAy0pPt2BA5BqR4ebKWzibwZBnQF6RNm2A";
+    private static final String API_KEY = "YOUR_GEMINI_API_KEY_HERE";
 
-    // Upgraded to 2.5-flash as per Architect's command
+    // We use gemini-2.5-flash for maximum speed and intelligence
     private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + API_KEY;
 
     private HttpClient httpClient;
 
     public GeminiAIService() {
+        /*
+         * FEYNMAN COMMENT: The HttpClient
+         * Think of this like our personal postal worker. Instead of hiring a new postman
+         * every time we want to ask Google a question, we hire him once when the app starts,
+         * and keep him on standby to deliver our JSON letters.
+         */
         this.httpClient = HttpClient.newHttpClient();
     }
 
@@ -32,18 +42,6 @@ public class GeminiAIService {
             """;
         String fullPrompt = systemPrompt + "\n\nUSER RAW CV:\n" + rawUserText;
         return callGemini(fullPrompt);
-    }
-
-    public String generateGhostCVs(String jobDescription) {
-        String phantomPrompt = """
-            You are an ATS Sandbox Simulator. Read the following Job Description.
-            Generate 3 fake candidate profiles (Ghosts) applying for this job in Tunisia.
-            Return the result STRICTLY as a JSON array with these keys:[ { "name": "...", "ats_score": 85, "strengths": "...", "weaknesses": "..." } ]
-            Do not output markdown, ONLY valid JSON.
-            
-            JOB DESCRIPTION: 
-            """ + jobDescription;
-        return callGemini(phantomPrompt);
     }
 
     public String extractJobDetails(String rawText) {
@@ -62,6 +60,18 @@ public class GeminiAIService {
         return callGemini(prompt);
     }
 
+    public String generateGhostCVs(String jobDescription) {
+        String phantomPrompt = """
+            You are an ATS Sandbox Simulator. Read the following Job Description.
+            Generate 3 fake candidate profiles (Ghosts) applying for this job in Tunisia.
+            Return the result STRICTLY as a JSON array with these keys:[ { "name": "...", "ats_score": 85, "strengths": "...", "weaknesses": "..." } ]
+            Do not output markdown, ONLY valid JSON.
+            
+            JOB DESCRIPTION: 
+            """ + jobDescription;
+        return callGemini(phantomPrompt);
+    }
+
     public String forgeFinalCV(String interrogationHistory) {
         String forgePrompt = """
             You are the Elite Ex-Recruiter. Based on our interrogation history, output the FINAL, mathematically perfect CV.
@@ -69,54 +79,61 @@ public class GeminiAIService {
             
             ## WORK EXPERIENCE
             **[Company]** | [Location]
-            * **[Core Achievement]:** [Power Verb] [Task] resulting in [Metric].
+            * **[Core Achievement]:**[Power Verb] [Task] resulting in [Metric].
             
             INTERROGATION DATA:
             """ + interrogationHistory;
         return callGemini(forgePrompt);
     }
 
+    /**
+     * The Engine Room: Actually sends the HTTP request to Google and parses the response.
+     */
     private String callGemini(String promptText) {
         try {
+            // 1. Build the nested JSON package that Google requires
             JSONObject part = new JSONObject().put("text", promptText);
             JSONArray parts = new JSONArray().put(part);
             JSONObject content = new JSONObject().put("parts", parts);
             JSONArray contents = new JSONArray().put(content);
             JSONObject requestBody = new JSONObject().put("contents", contents);
 
+            // 2. Prepare the HTTP request
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(API_URL))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
                     .build();
 
+            // 3. Send the request and get the raw string response
             HttpResponse<String> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             String rawResponse = response.body();
-
             JSONObject jsonResponse = new JSONObject(rawResponse);
 
-            // Shield 1: Google sends an explicit error
+            /*
+             * FEYNMAN COMMENT: The Shields
+             * Sometimes Google refuses to answer. If we blindly look for the answer without
+             * checking if Google sent an error, our JSON parser will crash (NullPointerException).
+             * These shields intercept Google's complaints so the app stays alive.
+             */
             if (jsonResponse.has("error")) {
                 String googleError = jsonResponse.getJSONObject("error").getString("message");
                 IO.println("❌ Google API Refused: " + googleError);
                 return "ERROR: " + googleError;
             }
 
-            // Shield 2: Google Safety Filters blocked the prompt
             if (!jsonResponse.has("candidates")) {
                 IO.println("❌ Gemini blocked the response! RAW GOOGLE OUTPUT: " + rawResponse);
                 return "ERROR: Blocked by Google or Invalid Format.";
             }
 
-            // Success path
-            String aiAnswer = jsonResponse.getJSONArray("candidates")
+            // 4. Safely extract the text from the nested JSON tree
+            return jsonResponse.getJSONArray("candidates")
                     .getJSONObject(0)
                     .getJSONObject("content")
                     .getJSONArray("parts")
                     .getJSONObject(0)
                     .getString("text");
-
-            return aiAnswer;
 
         } catch (Exception e) {
             IO.println("❌ Gemini API Strike Failed: " + e.getMessage());

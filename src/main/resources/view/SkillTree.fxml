@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="TOP_CENTER" spacing="20.0" styleClass="root" stylesheets="@../css/style.css" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.careerforge.controller.SkillTreeController">
+    <children>
+        <!-- HEADER -->
+        <VBox alignment="CENTER" spacing="5.0" style="-fx-padding: 30 0 0 0;">
+            <children>
+                <Label text="SKILL TREE: THE PATH OF ASCENSION" textFill="#58a6ff">
+                    <font><Font name="System Bold" size="28.0" /></font>
+                </Label>
+                <Label text="Blue = Mastered Power | Red = Required to Dethrone the Ghosts" textFill="#8b949e" />
+            </children>
+        </VBox>
+
+        <!-- THE DRAWING PANE -->
+        <Pane fx:id="skillCanvas" prefHeight="500.0" prefWidth="800.0" styleClass="skill-canvas" VBox.vgrow="ALWAYS" />
+
+        <!-- BOTTOM ACTION -->
+        <HBox alignment="CENTER" prefHeight="100.0" spacing="20.0">
+            <children>
+                <Button onAction="#handleLevelUp" prefHeight="50.0" prefWidth="300.0" styleClass="action-button" text="🚀 GENERATE GROWTH PLAN" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

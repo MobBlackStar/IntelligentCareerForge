@@ -23,11 +23,13 @@ import java.util.concurrent.CompletableFuture;
 
 public class WarRoomController {
 
+    // UI Hooks to the FXML
     @FXML private VBox targetedColumn;
     @FXML private VBox appliedColumn;
     @FXML private VBox interviewingColumn;
     @FXML private TextArea magicPasteArea;
 
+    // Database and Logic Engines
     private ApplicationDAO appDAO = new ApplicationDAO();
     private JobOfferDAO jobDAO = new JobOfferDAO();
     private UserDAO userDAO = new UserDAO();
@@ -38,21 +40,21 @@ public class WarRoomController {
     public void initialize() {
         IO.println("⚔️ WAR ROOM: Hydrating Command Center from Database...");
 
+        // INVISIBLE BUCKET FIX: Ensures empty columns can still receive dragged cards
         targetedColumn.setMinHeight(450.0);
         appliedColumn.setMinHeight(450.0);
         interviewingColumn.setMinHeight(450.0);
 
-        // 1. THE HYDRATION ENGINE: Load everything from MySQL when the app opens!
         hydrateKanbanBoard();
 
-        // 2. TEACH THE COLUMNS TO ACCEPT DRAGGING
+        // Turn the UI VBoxes into actual Drop Zones
         setupDropZone(targetedColumn, "TARGETED");
         setupDropZone(appliedColumn, "APPLIED");
         setupDropZone(interviewingColumn, "INTERVIEWING");
     }
 
     /**
-     * FEDI-STANDARD HYDRATION: Clears the UI and rebuilds it from the Database.
+     * Loads jobs from the database and rebuilds the UI automatically.
      */
     private void hydrateKanbanBoard() {
         targetedColumn.getChildren().clear();
@@ -63,7 +65,6 @@ public class WarRoomController {
         ArrayList<JobOffer> allJobs = jobDAO.readAll();
 
         for (Application app : allApps) {
-            // Find the matching JobOffer for this Application
             JobOffer matchedJob = null;
             for (JobOffer job : allJobs) {
                 if (job.getId() == app.getJobOfferId()) {
@@ -81,26 +82,27 @@ public class WarRoomController {
                 }
             }
         }
-        IO.println("💧 Hydration Complete: Loaded " + allApps.size() + " cards from MySQL.");
     }
 
     /**
-     * FEDI-STANDARD DRY: Creates the UI Card and attaches all Drag & Drop mechanics automatically.
+     * Creates the physical Card and attaches the Drag mechanic.
      */
     private Label createJobCard(Application app, JobOffer job) {
         Label jobCard = new Label(job.getTitle() + " @ " + job.getCompany());
 
-        // The ID of the UI element is literally the Application ID from the Database!
+        // We hide the Database ID inside the UI element so we can find it later!
         String uniqueCardId = String.valueOf(app.getId());
         jobCard.setId(uniqueCardId);
 
-        jobCard.setStyle("-fx-background-color: #21262d; -fx-text-fill: #58a6ff; -fx-padding: 15; -fx-border-color: #30363d; -fx-border-radius: 8; -fx-font-weight: bold;");
+        // Sarah's CSS class
+        jobCard.getStyleClass().add("job-card");
         jobCard.setPrefWidth(260);
 
-        jobCard.setOnMouseEntered(e -> jobCard.setStyle("-fx-background-color: #21262d; -fx-text-fill: #58a6ff; -fx-padding: 15; -fx-border-color: #58a6ff; -fx-border-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;"));
-        jobCard.setOnMouseExited(e -> jobCard.setStyle("-fx-background-color: #21262d; -fx-text-fill: #58a6ff; -fx-padding: 15; -fx-border-color: #30363d; -fx-border-radius: 8; -fx-font-weight: bold;"));
-
-        // THE DRAG MECHANIC
+        /*
+         * FEYNMAN COMMENT: The Drag Mechanic
+         * When the user clicks and drags, we package the Card's ID into a "Clipboard".
+         * The OS holds this clipboard while the mouse moves.
+         */
         jobCard.setOnDragDetected(event -> {
             IO.println("🖱️ Picked up Application ID: " + uniqueCardId);
             Dragboard db = jobCard.startDragAndDrop(TransferMode.ANY);
@@ -114,7 +116,7 @@ public class WarRoomController {
     }
 
     /**
-     * FEDI-STANDARD DRY: Sets up any column to accept drops and trigger real data payloads.
+     * Wires a column to accept a falling card and update the database.
      */
     private void setupDropZone(VBox column, String targetStatus) {
         column.setOnDragOver(event -> {
@@ -130,30 +132,25 @@ public class WarRoomController {
 
             if (db.hasString()) {
                 int appId = Integer.parseInt(db.getString());
-
-                // TARGET 3: REAL DATA PAYLOAD
-                // Find the exact Application, Job, and User from the Database
                 Application activeApp = appDAO.readAll().stream().filter(a -> a.getId() == appId).findFirst().orElse(null);
 
                 if (activeApp != null) {
                     JobOffer activeJob = jobDAO.readAll().stream().filter(j -> j.getId() == activeApp.getJobOfferId()).findFirst().orElse(null);
-                    // Assuming User ID 1 is our main logged-in user for now
                     User activeUser = userDAO.readAll().stream().filter(u -> u.getId() == activeApp.getUserId()).findFirst().orElse(null);
 
                     if (activeJob != null && activeUser != null) {
-                        // Update Database Status
+                        // 1. Save new status to database
                         appDAO.updateKanbanStatus(appId, targetStatus);
                         activeApp.setKanbanStatus(targetStatus);
 
-                        // Re-hydrate the board to visually move the card
+                        // 2. Visually snap the card into place
                         Platform.runLater(this::hydrateKanbanBoard);
 
-                        // IF DROPPED IN APPLIED -> TRIGGER ARSENAL WITH REAL DATA!
+                        // 3. ARSENAL TRIGGER: If they dropped it into APPLIED, forge the Cover Letter!
                         if (targetStatus.equals("APPLIED")) {
                             IO.println("🔥 REAL CARD DROPPED IN APPLIED! Unleashing Arsenal for: " + activeJob.getCompany());
                             arsenalService.generateDeploymentPackage(activeUser, activeJob, activeApp);
                         }
-
                         success = true;
                     }
                 }
@@ -172,6 +169,12 @@ public class WarRoomController {
         magicPasteArea.setText("Oracle is analyzing the messy text... Please wait.");
         magicPasteArea.setDisable(true);
 
+        /*
+         * FEYNMAN COMMENT: Async Execution
+         * If we ran this AI call on the main thread, the entire JavaFX window would
+         * freeze and turn white while waiting for Google.
+         * CompletableFuture sends the task to a background worker.
+         */
         CompletableFuture.runAsync(() -> {
             try {
                 IO.println("🧠 Asking Gemini to extract Job details...");
@@ -181,25 +184,24 @@ public class WarRoomController {
                     throw new Exception(aiJsonResponse);
                 }
 
+                // Parse JSON
                 String cleanJson = aiJsonResponse.replace("```json", "").replace("```", "").trim();
                 JSONObject jobData = new JSONObject(cleanJson);
                 String extractedTitle = jobData.optString("title", "Unknown Title");
                 String extractedCompany = jobData.optString("company", "Unknown Company");
                 String extractedPain = jobData.optString("pain_point", "Needs AI optimization.");
 
-                // 1. Create Job in DB
+                // Save Job and App to DB
                 JobOffer newJob = new JobOffer(extractedTitle, extractedCompany, rawText, extractedPain);
                 jobDAO.create(newJob);
 
-                // 2. Fetch the newly created Job ID (University workaround: grab the last one)
                 ArrayList<JobOffer> allJobs = jobDAO.readAll();
                 JobOffer savedJob = allJobs.get(allJobs.size() - 1);
 
-                // 3. Create the Application Kanban Card in DB (Assuming User 1, CV 1)
                 Application newApp = new Application(1, savedJob.getId(), 1, "TARGETED", "", "", "");
                 appDAO.create(newApp);
 
-                // 4. Visually update UI by re-hydrating!
+                // Update UI safely
                 Platform.runLater(() -> {
                     hydrateKanbanBoard();
                     magicPasteArea.clear();

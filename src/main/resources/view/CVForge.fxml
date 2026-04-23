@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<SplitPane dividerPositions="0.4" prefHeight="750.0" prefWidth="1200.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.careerforge.controller.CVForgeController">
+    <items>
+
+        <!-- LEFT SIDE: THE RICH FORMULAIRE -->
+        <ScrollPane fitToWidth="true" style="-fx-background-color: #0d1117;">
+            <content>
+                <VBox spacing="15.0" style="-fx-padding: 30; -fx-background-color: #0d1117;">
+                    <children>
+                        <Label styleClass="form-section-header" text="IDENTITY MATRIX" />
+                        <TextField fx:id="nameInput" promptText="Full Name" />
+                        <TextField fx:id="emailInput" promptText="Professional Email" />
+                        <TextField fx:id="phoneInput" promptText="Phone (e.g. +216...)" />
+
+                        <Label styleClass="form-section-header" text="CORE SKILLS" />
+                        <TextArea fx:id="skillsInput" prefHeight="80.0" promptText="Java, Python, Growth Marketing..." wrapText="true" />
+
+                        <Label styleClass="form-section-header" text="ACADEMIC BACKGROUND" />
+                        <TextField fx:id="educationInput" promptText="Degree, University, Year" />
+
+                        <Label styleClass="form-section-header" text="NOTABLE TRIUMPHS (PROJECTS)" />
+                        <TextArea fx:id="projectsInput" prefHeight="120.0" promptText="Describe your top projects and their impact..." wrapText="true" />
+
+                        <!-- THE TEMPLATE MATRIX -->
+                        <Label styleClass="form-label" text="CHOOSE YOUR AESTHETIC" />
+                        <HBox spacing="10.0">
+                            <children>
+                                <Button onAction="#applyModernTemplate" prefWidth="125.0" style="-fx-background-color: #58a6ff;" styleClass="action-button" text="MODERN" />
+                                <Button onAction="#applyMinimalTemplate" prefWidth="125.0" style="-fx-background-color: #30363d;" styleClass="action-button" text="MINIMAL" />
+                                <Button onAction="#applyProfessionalTemplate" prefWidth="125.0" style="-fx-background-color: black;" styleClass="action-button" text="PROFESSIONAL" />
+                            </children>
+                        </HBox>
+
+                        <Region prefHeight="20.0" />
+                        <Button onAction="#handleSaveCV" prefHeight="45.0" prefWidth="400.0" styleClass="action-button" text="💾 SAVE MASTER ENGRAM" />
+                        <Label fx:id="advisorLabel" styleClass="advisor-bubble" text="✨ Oracle is watching..." />
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+
+        <!-- RIGHT SIDE: THE STRUCTURED PREVIEW -->
+        <StackPane style="-fx-background-color: #161b22; -fx-padding: 30;">
+            <children>
+                <VBox fx:id="previewPaper" maxWidth="550.0" prefHeight="700.0" styleClass="cv-preview-paper" spacing="10">
+                    <children>
+                        <!-- HEADER SECTION -->
+                        <Label fx:id="previewName" text="YOUR NAME" textFill="#1a1a2e">
+                            <font><Font name="System Bold" size="26.0" /></font>
+                        </Label>
+                        <Label fx:id="previewContact" text="email@example.com | +216 00 000 000" textFill="#4a4a6a" />
+
+                        <Separator prefWidth="200.0" style="-fx-background-color: #58a6ff;" />
+
+                        <!-- SKILLS SECTION -->
+                        <Label text="TECHNICAL ARSENAL" textFill="#58a6ff" style="-fx-font-weight: bold; -fx-font-size: 14;" />
+                        <Label fx:id="previewSkills" styleClass="preview-text" text="Skills will appear here..." wrapText="true" />
+
+                        <!-- EDUCATION SECTION -->
+                        <Label text="EDUCATION" textFill="#58a6ff" style="-fx-font-weight: bold; -fx-font-size: 14;" />
+                        <Label fx:id="previewEducation" styleClass="preview-text" text="Education details..." />
+
+                        <!-- PROJECTS SECTION -->
+                        <Label text="PROJECTS &amp; IMPACT" textFill="#58a6ff" style="-fx-font-weight: bold; -fx-font-size: 14;" />
+                        <Label fx:id="previewProjects" alignment="TOP_LEFT" minHeight="150.0" styleClass="preview-text" text="Project triumphs will appear here..." wrapText="true" />
+                    </children>
+                </VBox>
+            </children>
+        </StackPane>
+
+    </items>
+</SplitPane>

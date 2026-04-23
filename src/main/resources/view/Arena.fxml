@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" spacing="35.0" styleClass="arena-root" stylesheets="@../css/style.css" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.careerforge.controller.ArenaController">
+    <children>
+        <!-- CLEAN ALPHA HEADER -->
+        <Label text="THE ARENA: PRESSURE COOKER" textFill="#ff0044">
+            <font><Font name="System Bold" size="32.0" /></font>
+        </Label>
+
+        <!-- THE ALPHA TIMER -->
+        <VBox alignment="CENTER" spacing="5.0">
+            <children>
+                <Label text="SURVIVAL TIME" textFill="#8b949e">
+                    <font><Font size="12.0" /></font>
+                </Label>
+                <Label fx:id="timerLabel" styleClass="timer-label" text="60" />
+            </children>
+        </VBox>
+
+        <!-- THE INTERROGATION BOX -->
+        <Label fx:id="questionDisplay" styleClass="question-display" text="Click START to begin your interrogation..." wrapText="true" maxWidth="700.0" minHeight="140.0" />
+
+        <!-- THE USER INPUT -->
+        <TextArea fx:id="answerArea" maxWidth="700.0" prefHeight="160.0" promptText="Your survival depends on your response..." styleClass="arena-input" wrapText="true" />
+
+        <!-- THE PILL BUTTON -->
+        <Button fx:id="actionButton" onAction="#handleArenaAction" prefHeight="55.0" prefWidth="350.0" styleClass="panic-button" text="START INTERVIEW">
+            <font><Font name="System Bold" size="18.0" /></font>
+        </Button>
+    </children>
+</VBox>
