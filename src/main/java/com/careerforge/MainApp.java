@@ -10,25 +10,19 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-        // 🛑 FEDI-STANDARD: We ask the Solanum Core to materialize the MASTER SHELL!
-        Parent root = SolanumCore.getInstance().observe("MainLayout.fxml");
+        // 🛑 THE CORRECTION: Start at Login, NOT the Dashboard Shell
+        // This ensures the user must authenticate first.
+        Parent root = com.careerforge.core.SolanumCore.getInstance().observe("Login.fxml");
 
         Scene mainScene = new Scene(root);
-
-        // The Global Theme Engine
         String css = getClass().getResource("/css/style.css").toExternalForm();
         mainScene.getStylesheets().add(css);
 
-        primaryStage.setTitle("THE CAREER FORGE - Omni-Chimera");
+        primaryStage.setTitle("THE CAREER FORGE - Authentication Required");
         primaryStage.setScene(mainScene);
-
-        // Make the window big enough for the Shell!
-        primaryStage.setWidth(1366);
-        primaryStage.setHeight(768);
-
         primaryStage.show();
 
-        IO.println("✅ OMNI-CHIMERA ONLINE. The Living Shell is breathing.");
+        System.out.println("🔐 OMNI-CHIMERA: The Gate is locked. Awaiting Identity.");
     }
+
 }

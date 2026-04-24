@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" spacing="25.0" styleClass="root" stylesheets="@../css/style.css" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.careerforge.controller.LoginController">
+    <children>
+        <Label text="INITIATE IDENTITY" textFill="#00f2fe" style="-fx-font-size: 32; -fx-font-weight: bold;" />
+
+        <VBox maxWidth="450.0" spacing="12.0" styleClass="kanban-column" style="-fx-padding: 30;">
+            <children>
+                <Label text="Full Name" styleClass="form-label" />
+                <TextField fx:id="regName" promptText="Enter your name" />
+
+                <Label text="Email Address" styleClass="form-label" />
+                <TextField fx:id="regEmail" promptText="Used for login" />
+
+                <Label text="Create Password" styleClass="form-label" />
+                <PasswordField fx:id="regPass" promptText="Choose a strong password" />
+
+                <Label text="Career Objective" styleClass="form-label" />
+                <TextField fx:id="regTarget" promptText="e.g. Data Scientist" />
+
+                <Button onAction="#handleRegister" prefHeight="45.0" prefWidth="350.0" styleClass="action-button" text="FORGE ACCOUNT" />
+                <Button onAction="#showLogin" text="Back to Login" style="-fx-background-color: transparent; -fx-text-fill: #8b949e; -fx-cursor: hand;" />
+            </children>
+        </VBox>
+    </children>
+</VBox>

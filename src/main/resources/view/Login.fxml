@@ -1,38 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
-
-<!-- SARAH: Notice how fx:controller links directly to your Java file! -->
-
-<AnchorPane prefHeight="496.0" prefWidth="698.0" style="-fx-background-color: #0f0f1a;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.careerforge.controller.LoginController">
+<VBox alignment="CENTER" spacing="30.0" styleClass="root" stylesheets="@../css/style.css" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.careerforge.controller.LoginController">
     <children>
-        <Label layoutX="183.0" layoutY="83.0" text="THE CAREER FORGE" textFill="#00f2fe">
-            <font>
-                <Font name="System Bold" size="36.0" />
-            </font>
-        </Label>
-        <Label layoutX="268.0" layoutY="136.0" text="Ascend beyond the mortal CV" textFill="#a0a0b5" />
+        <VBox alignment="CENTER" spacing="10.0">
+            <children>
+                <Label text="THE CAREER FORGE" textFill="#58a6ff" style="-fx-font-size: 40; -fx-font-weight: bold; -fx-letter-spacing: 2;" />
+                <Label text="Log in to your professional destiny" textFill="#8b949e" />
+            </children>
+        </VBox>
 
-        <!-- FXML Wires: fx:id must match the variable names in LoginController.java exactly! -->
-        <TextField fx:id="emailField" layoutX="225.0" layoutY="210.0" prefHeight="40.0" prefWidth="250.0" promptText="Enter your email..." style="-fx-background-color: #1a1a2e; -fx-text-fill: white; -fx-border-color: #00f2fe; -fx-border-radius: 5;" />
-        <PasswordField fx:id="passwordField" layoutX="225.0" layoutY="270.0" prefHeight="40.0" prefWidth="250.0" promptText="Enter your password..." style="-fx-background-color: #1a1a2e; -fx-text-fill: white; -fx-border-color: #00f2fe; -fx-border-radius: 5;" />
+        <VBox maxWidth="380.0" spacing="20.0" styleClass="kanban-column" style="-fx-padding: 40; -fx-background-radius: 20;">
+            <children>
+                <VBox spacing="8.0">
+                    <Label text="IDENTITY (EMAIL)" styleClass="form-label" textFill="#58a6ff" />
+                    <!-- PLACEHOLDER ADDED HERE -->
+                    <TextField fx:id="emailField" prefHeight="45.0" promptText="e.g. sarra@career.tn" styleClass="text-field" />
+                </VBox>
 
-        <!-- FXML Wire: onAction calls the handleLogin method in your Java file! -->
-        <Button layoutX="225.0" layoutY="340.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #00f2fe; -fx-text-fill: #0f0f1a; -fx-font-weight: bold; -fx-background-radius: 5;" text="ENTER THE ARENA" textFill="#0f0923">
-            <font>
-                <Font size="16.0" />
-            </font>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-        </Button>
+                <VBox spacing="8.0">
+                    <Label text="ACCESS KEY (PASSWORD)" styleClass="form-label" textFill="#58a6ff" />
+                    <!-- SECURE DOTS ENABLED -->
+                    <PasswordField fx:id="passwordField" prefHeight="45.0" promptText="Enter your password" />
+                </VBox>
 
-        <Label fx:id="errorLabel" alignment="CENTER" layoutX="150.0" layoutY="410.0" prefWidth="400.0" textFill="#ff0044" />
+                <Button onAction="#handleLogin" prefHeight="50.0" prefWidth="380.0" styleClass="action-button" text="ENTER THE MATRIX" />
+
+                <HBox alignment="CENTER" spacing="25.0">
+                    <children>
+                        <Button onAction="#showRegister" text="CREATE ACCOUNT" style="-fx-background-color: transparent; -fx-text-fill: #00f2fe; -fx-font-weight: bold; -fx-cursor: hand;" />
+                        <Button onAction="#showForgotPassword" text="FORGOT ACCESS?" style="-fx-background-color: transparent; -fx-text-fill: #8b949e; -fx-font-size: 11; -fx-cursor: hand;" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+        <Label fx:id="errorLabel" alignment="CENTER" prefWidth="500.0" wrapText="true" />
     </children>
-</AnchorPane>
+</VBox>
